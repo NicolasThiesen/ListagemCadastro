@@ -10,7 +10,7 @@
     <ListView
         android:id="@+id/products_list"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="350dp" />
 
     <Button
         android:id="@+id/brn_novo_produto"

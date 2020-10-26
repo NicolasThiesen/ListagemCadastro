@@ -2,19 +2,18 @@ package com.example.listagemcadastro;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.listagemcadastro.database.ProdutoDAO;
 import com.example.listagemcadastro.modelo.Produto;
 
 public class CadastroProduto extends AppCompatActivity {
-    private final int RESULT_CODE_NOVO_PRODUTO = 10;
-    private final int RESULT_CODE_PRODUTO_EDITADO = 11;
-    private final int RESULT_CODE_PRODUTO_EXCLUIDO = 11;
 
-    private boolean edicao = false;
     private  int id = 0;
 
     @Override
@@ -34,25 +33,9 @@ public class CadastroProduto extends AppCompatActivity {
             etNome.setText(produto.getNome());
             etValor.setText(String.valueOf(produto.getValor()));
             id = produto.getId();
-            edicao = true;
         }
     }
-    public void onClickExcluir(View v){
-        if(edicao){
-            EditText Enome = findViewById(R.id.et_nome);
-            EditText Evalor = findViewById(R.id.et_valor);
 
-            String nome = Enome.getText().toString();
-            Float valor = Float.parseFloat(Evalor.getText().toString());
-            Intent intent = new Intent();
-
-            Produto produto = new Produto(id,nome, valor);
-
-            intent.putExtra("produtoExcluido",produto);
-            setResult(RESULT_CODE_PRODUTO_EXCLUIDO,intent);
-            finish();
-        }
-    }
     public void onClickVoltar(View v){
         finish();
     }
@@ -63,16 +46,17 @@ public class CadastroProduto extends AppCompatActivity {
 
         String nome = Enome.getText().toString();
         Float valor = Float.parseFloat(Evalor.getText().toString());
-        Intent intent = new Intent();
 
         Produto produto = new Produto(id,nome, valor);
-        if (edicao){
-            intent.putExtra("produtoEdicao", produto);
-            setResult(RESULT_CODE_PRODUTO_EDITADO,intent);
+
+        ProdutoDAO produtoDAO = new ProdutoDAO(getBaseContext());
+        boolean salvo = produtoDAO.salvar(produto);
+        if (salvo){
+            finish();
         }else {
-            intent.putExtra("novoProduto", produto);
-            setResult(RESULT_CODE_NOVO_PRODUTO, intent);
+            Toast.makeText(CadastroProduto.this, "Erro ao salvar o produto", Toast.LENGTH_LONG).show();
         }
+
         finish();
 
     }
