@@ -1,67 +1,79 @@
 package com.example.listagemcadastro;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.listagemcadastro.database.ProdutoDAO;
 import com.example.listagemcadastro.modelo.Produto;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
-    private ListView list_products;
+public class Produtos extends AppCompatActivity {
+    private ListView list_categories;
     private ArrayAdapter<Produto> adapterProdutos;
 
-    private final int REQUEST_CODE_NOVO_PRODUTO = 1;
-    private final int RESULT_CODE_NOVO_PRODUTO = 10;
-    private final int REQUEST_CODE_EDIT_PRODUTO = 2;
-    private final int RESULT_CODE_EDIT_PRODUTO =11;
-    private final int RESULT_CODE_EXCLUDE_PRODUTO =12;
 
     private int id = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_produtos);
         setTitle("Produtos");
 
-        list_products = findViewById(R.id.products_list);
+        list_categories = findViewById(R.id.products_list);
         ArrayList<Produto> produtos = new ArrayList<Produto>();
 
         defineOnClickListenerListView();
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.categorias:
+                Intent intent = new Intent(Produtos.this, Categorias.class);
+                startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         ProdutoDAO produtoDAO = new ProdutoDAO(getBaseContext());
-        adapterProdutos = new ArrayAdapter<Produto>(MainActivity.this,android.R.layout.simple_list_item_1,produtoDAO.listar());
-        list_products.setAdapter(adapterProdutos);
+        adapterProdutos = new ArrayAdapter<Produto>(Produtos.this,android.R.layout.simple_list_item_1,produtoDAO.listar());
+        list_categories.setAdapter(adapterProdutos);
     }
 
     private void defineOnClickListenerListView(){
-        list_products.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list_categories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Produto clickProduto = adapterProdutos.getItem(position);
-                Intent intent = new Intent(MainActivity.this, CadastroProduto.class);
+                Intent intent = new Intent(Produtos.this, CadastroProduto.class);
                 intent.putExtra("produtoEdicao", clickProduto);
                 startActivity(intent);
             }
         });
-        list_products.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        list_categories.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
                 Produto produtoClicked = adapterProdutos.getItem(position);
@@ -96,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void  onClickNovoProduto(View v){
-        Intent intent = new Intent(MainActivity.this, CadastroProduto.class);
+        Intent intent = new Intent(Produtos.this, CadastroProduto.class);
         startActivity(intent);
     }
 

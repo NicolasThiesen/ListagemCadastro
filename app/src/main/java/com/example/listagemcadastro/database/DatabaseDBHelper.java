@@ -6,12 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.listagemcadastro.database.contract.CategoriaContract;
 import com.example.listagemcadastro.database.contract.ProdutoContract;
 
 public class DatabaseDBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "db_produto";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     public DatabaseDBHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -19,11 +20,14 @@ public class DatabaseDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CategoriaContract.criarTabela());
         db.execSQL(ProdutoContract.criarTabela());
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(CategoriaContract.removerTabela());
+        db.execSQL(CategoriaContract.criarTabela());
         db.execSQL(ProdutoContract.removerTabela());
         db.execSQL(ProdutoContract.criarTabela());
     }

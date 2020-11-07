@@ -2,7 +2,6 @@ package com.example.listagemcadastro;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -28,7 +27,7 @@ public class CadastroProduto extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent != null && intent.getExtras() !=null && intent.getExtras().get("produtoEdicao") !=null){
             Produto produto = (Produto) intent.getExtras().get("produtoEdicao");
-            EditText etNome = findViewById(R.id.et_nome);
+            EditText etNome = findViewById(R.id.et_descricao);
             EditText etValor = findViewById(R.id.et_valor);
             etNome.setText(produto.getNome());
             etValor.setText(String.valueOf(produto.getValor()));
@@ -41,7 +40,7 @@ public class CadastroProduto extends AppCompatActivity {
     }
     public void onClickSalvar(View v){
 
-        EditText Enome = findViewById(R.id.et_nome);
+        EditText Enome = findViewById(R.id.et_descricao);
         EditText Evalor = findViewById(R.id.et_valor);
 
         String nome = Enome.getText().toString();
